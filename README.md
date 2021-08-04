@@ -182,3 +182,42 @@ git config --add merge.ff false
 ```
 git config --global --add merge.ff false
 ```
+
+### bug分支
+- 保存当前现场
+```
+git stash
+```
+- 查看工作现场
+```
+git stash list
+```
+- 恢复工作现场
+```
+//恢复同时把stash内容也删了
+git stash pop
+```
+- 恢复指定的stash
+```
+git stash apply stash@{0}
+```
+- 删除stash内容
+```
+git stash drop
+```
+- 复制一个分支提交到当前分支
+**当前分支需将修改内容提交后再进行复制**
+```
+//3622897为被删除的临时创建用来修复bug的分支
+git cherry-pick 3622897
+```
+**example**
+//当前位于master分支上
+```
+//创建dev分支
+git switch -c dev
+//修改readme.txt中...，收到bug需立即解决，先保存现场
+
+
+
+```
