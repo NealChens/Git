@@ -1,4 +1,5 @@
 # Git
+## 参考网站：https://www.liaoxuefeng.com/wiki/896043488029600
 
 ## 设置用户名与邮箱地址
 global表示你这台机器上所有的Git仓库都使用这个配置
@@ -206,15 +207,55 @@ git stash apply stash@{0}
 git stash drop
 ```
 - 复制一个分支提交到当前分支
-**当前分支需将修改内容提交后再进行复制**
+- 当前分支需将修改内容提交后再进行复制
 ```
 //3622897为被删除的临时创建用来修复bug的分支
 git cherry-pick 3622897
 ```
 **example**
-//当前位于master分支上
+- 当前位于master分支上
 ```
-//创建dev分支
+//创建并切换到dev分支
 git switch -c dev
-//修改readme.txt中...，收到bug需立即解决，先保存现场
+//修改readme.txt中...，收到master的bug需立即解决，先保存现场
+git stash
+//切换到master分支
+git switch master
+//创建临时分支修改bug
+git switch -c bug-101
+//修改完readme.txt提交
+git add readme.txt
+git commit -m "fix bug-101"
+//切换到master分支，进行合并
+git switch master
+git merge --no-ff -m "merge fix bug-101" bug-101
+//删除bug-101分支,删除后会得到一个值(**bb061fb**),用于下面的复制
+git branch -d bug-101
+//回到dev分支继续修改
+git switch dev
+//查看工作现场
+git stash list
+//恢复的同时把stash内容删除
+git stash pop
+//因为dev分支是从master分支分出来的，这个bug在dev分支上也存在
+//先将dev分支的修改提交，再将bug-101提交所做的修改复制到dev分支
+git add readme.txt
+git commit -m "learn fix bug through branch"
+git cherry-pick bb061fb
 ```
+### Feature分支
+- 每添加一个功能，新建一个feature进行开发,完成后合并，最后再删除掉该分支
+- 强行删除未合并的分支
+```
+//feature-1为新开发的功能分支
+git branch -D feature-1
+```
+
+### 多人合作
+**从远程库克隆时，Git自动把本地的master分支和远程的master分支对应起来,默认远程仓库名称为origin**
+- 查看远程库
+- -v显示更详细的信息，显示可以抓取和推送的origin的地址，如果没有推送权限，就看不到push的地址
+```
+git remote
+```
+-推送分支
