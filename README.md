@@ -122,3 +122,63 @@ git remote -v
 //删除远程库origin
 git remote rm origin
 ```
+
+### 从远程库克隆
+```
+git clone git@github.com:NealChens/gitskills.git
+```
+
+## 分支管理
+### 创建与合并分支
+- 查看分支
+```
+git branch
+```
+- 创建分支
+```
+git branch branchname
+```
+- 切换分支
+```
+git switch branchname
+```
+- 创建+切换分支
+```
+git switch -c branchname
+```
+- 合并某分支到当前分支
+```
+git merge branchname
+```
+- 删除分支
+```
+git branch -d branchname
+```
+
+### 解决冲突
+**当有多个分支修改后，Git无法自动合并分支时，必须先解决冲突后，再提交，最后再合并**
+- 查看分支合并图
+```
+git log --graph --pretty=oneline --abbrev-commit
+```
+
+### 分支管理策略
+- 合并分支时，加上--no-ff参数可以看合并后的历史所有分支，默认fast forward合并就看不出来曾经做过合并
+```
+git merge --no-ff -m "merge with no-ff" branchname
+```
+**设置省略--no-ff**
+- 当前分支
+```
+git config branch.master.mergeoptions "--no-ff"
+```
+- 当前版本库所有分支
+
+```
+git config --add merge.ff false
+```
+- 所有版本库的所有分支
+
+```
+git config --global --add merge.ff false
+```
