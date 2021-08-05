@@ -2,7 +2,7 @@
 ## 参考网站：https://www.liaoxuefeng.com/wiki/896043488029600
 
 ## 设置用户名与邮箱地址
-global表示你这台机器上所有的Git仓库都使用这个配置
+--global表示你这台机器上所有的Git仓库都使用这个配置
 ```
 git config --global user.name "Your Name"
 git config --global user.email "email@exp.com"
@@ -68,23 +68,23 @@ git reset --hard commit_id
 ## 撤销修改
 - 丢弃工作区修改
 ```
-git checkout -- file
+git checkout -- filename
 ```
 - 丢弃暂存区修改
 ```
-git reset HEAD file
-git cheout -- file
+git reset HEAD filename
+git cheout -- filename
 ```
 
 ## 删除文件
 **注意：从来没有被添加到版本库就被删除的文件，是无法恢复的!**
 - 已经提交到版本库中，在文件管理器中（工作区）手动删除文件
-- 确实要从版本库删除该文件
+- 1.确实要从版本库删除该文件
 ```
 git rm filename
 git commit -m "remove filename"
 ```
-- 删错了，想恢复
+- 2.删错了，想恢复
 - git checkout其实是用版本库的版本去替换掉工作区的版本
 ```
 git checkout -- filename
@@ -169,16 +169,16 @@ git log --graph --pretty=oneline --abbrev-commit
 git merge --no-ff -m "merge with no-ff" branchname
 ```
 **设置省略--no-ff**
-- 当前分支
+- 1.当前分支
 ```
 git config branch.master.mergeoptions "--no-ff"
 ```
-- 当前版本库所有分支
+- 2.当前版本库所有分支
 
 ```
 git config --add merge.ff false
 ```
-- 所有版本库的所有分支
+- 3.所有版本库的所有分支
 
 ```
 git config --global --add merge.ff false
@@ -259,3 +259,88 @@ git branch -D feature-1
 git remote
 ```
 -推送分支
+```
+//指定master分支上的所有本地提交推送到远程库origin
+git push origin master
+```
+- 多人协作工作模式
+- 1.试图推送自己的修改**git push origin branchname**
+- 2.如果失败，先试图合并**git pull**
+- 3.如果合并有冲突，则解决冲突，并在本地提交
+- 4.没有冲突或者解决掉冲突后，再推送就能提交成功**git push origin branchname**
+- 如果**git pull**提示no tracking information,说明本地分支与远程分支没有创建链接关系
+- 使用**git branch --set-upstream-to=origin/branchname branchname**创建链接，本地和远程分支的名称最好一致
+
+### Rebase
+**rebase操作的特点：把分叉的提交历史“整理”成一条直线，看上去更直观。缺点是本地的分叉提交已经被修改过了**
+- rebase的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要三方对比
+```
+git rebase
+```
+
+## 标签管理
+### 创建标签
+- 打标签
+```
+//切换到打标签的分支上
+git switch master
+//打标签
+git tag versionname
+```
+- 默认标签是打在最新提交的commit上的，可以找到历史提交commit id打标签
+```
+//-a指定标签名，-m指定说明文字,5756418是历史提交的commit id
+git tag -a -v1.0 -m "version 1.0 released" 5756418
+```
+### 查看所有标签
+```
+git tag
+```
+### 查看标签信息
+```
+git show tagname
+```
+### 使用Github
+- 在GitHub上，可以任意Fork开源仓库
+- 自己拥有Fork后的仓库的读写权限
+- 可以推送pull request给官方仓库来贡献代码
+
+## 使用Gitee
+**https://www.liaoxuefeng.com/wiki/896043488029600/1163625339727712**
+
+## 自定义Git
+### 显示颜色
+```
+git config --global color.ui true
+```
+### 忽略特殊文件
+**https://www.liaoxuefeng.com/wiki/896043488029600/900004590234208**
+
+### 配置别名
+- --global是全局参数，针对当前用户，表示这些命令在本机上的所有Git仓库下都有用
+```
+//用st表示status，br表示branch
+git config --global alias.st status
+git config --global alias.br branch
+//撤销修改
+git config --global alias.unstage 'reset HEAD'
+//配置最后一次提交信息
+git config --global alias.last 'log -1'
+//配置日志
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+```
+#### 配置文件
+**当前用户的Git配置文件放在用户主目录下的一个隐藏文件.gitconfig中**
+```
+//从分支返回主目录
+cd
+//查看.gitconfig文件
+cat .gitconfig
+```
+- 每个仓库的Git配置文件都放在.git/config文件中
+- 删除别名，在[alias]中直接把对应的行删掉就行
+
+## 搭建Git服务器
+**https://www.liaoxuefeng.com/wiki/896043488029600/899998870925664**
+
+## GUI工具：SourceTree
